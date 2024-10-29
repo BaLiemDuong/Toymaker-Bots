@@ -7,7 +7,7 @@ axis ([-2 2 -2.5 1 -0.1 1.5]);
 % Place Hans bot
 r = HansCute(transl(-0.32,0,0.5));
 % Place Toy bot
-%b = ToyBot(transl(0.4,0,0.555));
+b = ToyBot(transl(0.3,0,0.555));
 % Take the base of end-effector 
 base = r.model.fkineUTS(r.model.getpos());
 %Call the 2 fingers and plot the calculated base 
@@ -90,6 +90,9 @@ Operate.mov(r,T,q0);
 % T = transl(0.55 ,-0.1, 0.57)*troty(-pi);
 % Operate.mov(T,q0);
 % % Toybot second movement
+% q0 = deg2rad([45 45 45 0 0 90 0]);
+% T = transl(0.55 ,0.1, 0.57)*troty(-pi);
+% Operate.mov(T,q0);
 % q0 = deg2rad([45 45 45 0 0 90 0]);
 % T = transl(0.55 ,0.1, 0.57)*troty(-pi);
 % Operate.mov(T,q0);
