@@ -56,19 +56,19 @@ classdef Environment < handle
             transformedVertices = [vertices,ones(size(vertices,1),1)];
             set(object,'Vertices',transformedVertices(:,1:3));
         end
-        function car_base(pos)
+        function object = car_base(pos)
             object = PlaceObject('car_base.ply',pos);
             vertices = get(object,'Vertices');
             transformedVertices = [vertices,ones(size(vertices,1),1)];
             set(object,'Vertices',transformedVertices(:,1:3));
         end
-        function car_body(pos)
+        function object = car_body(pos)
             object = PlaceObject('car_body.ply',pos);
             vertices = get(object,'Vertices');
             transformedVertices = [vertices,ones(size(vertices,1),1)];
             set(object,'Vertices',transformedVertices(:,1:3));
         end
-        function wheels(pos)
+        function object = wheels(pos)
             object = PlaceObject('wheels_axial.ply',pos);
             vertices = get(object,'Vertices');
             transformedVertices = [vertices,ones(size(vertices,1),1)];
