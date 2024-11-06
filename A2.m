@@ -11,8 +11,8 @@ b = ToyBot(transl(0.3,0,0.555));
 % Take the base of end-effector 
 base = r.model.fkineUTS(r.model.getpos());
 %Call the 2 fingers and plot the calculated base 
-finger1 = HansFinger(base*transl(-0.016,-0.03,0.08)*trotz(deg2rad(35)));
-finger2 = HansFinger(base*transl(-0.016,0.03,0.08)*trotz(deg2rad(215)));
+finger1 = HansFinger(base*transl(-0.016,-0.03,0.1)*trotz(deg2rad(30)));
+finger2 = HansFinger(base*transl(-0.016,0.03,0.1)*trotz(deg2rad(210)));
 %% Position of objects
 % Fence 1
 pos1 = [0 1.3 0];
@@ -49,50 +49,63 @@ Environment.conveyer1(pos5);
 Environment.conveyer2(pos6);
 Environment.table(pos7);
 Environment.button(pos8);
-Environment.car_base(pos9);
-Environment.car_body(pos10);
-Environment.wheels(pos11);
-Environment.wheels(pos12);
+p1 = Environment.car_base(pos9);
+p2 = Environment.car_body(pos10);
+p3 = Environment.wheels(pos11);
+p4 = Environment.wheels(pos12);
 daspect([1 1 1]);
 % Add axis labels
 xlabel('X-axis');
 ylabel('Y-axis');
 zlabel('Z-axis');
-%% Move and stuffs
-% car = [-0.8 0.1 0.7];
-% guess = [-90 0 0 0 0 90 0];
-% carend = [0 0 0.7];
-% armend = [90 0 0 0 0 90 0];
-% qtraj = Operate.CreateTraj(r,car,guess);
-% 
-% Operate.Move2Part(r,qtraj,finger1,finger2);
-% 
-% qTraj = Operate.CreateTraj(r, carend, armend);
 %%
 % Hans first movement
-q0 = deg2rad([45 45 45 0 0 90 0]);
-T = transl(-0.55 ,-0.1, 0.6)*troty(-pi);
-Operate.mov(r,T,q0);
-% Hans first movement
-q0 = deg2rad([-45 -45 -45 0 0 90 0]);
-T = transl(-0.2 ,0.1, 0.51)*troty(-pi);
-Operate.mov(r,T,q0);
+q0 = deg2rad([45 0 -45 0 0 0 0]);
+T = transl(-0.55 ,-0.1, 0.7)*troty(-pi);
+qMatrix = Operate.traj(r,T,q0);
+Operate.mov(r,qMatrix,finger1,finger2);
+% Delete car part
+try delete(p3); 
+catch ME
+end
+% Grab part and move
+q0 = deg2rad([90 0 0 0 0 0 0]);
+T = transl(0, -0.05, 0.6)*troty(-pi);
+qMatrix = Operate.traj(r,T,q0);
+Operate.PlotPose('wheels_axial.ply',r,qMatrix,finger1,finger2,pos11);
+
+% Hans second movement
+q0 = deg2rad([45 0 -45 0 0 0 0]);
+T = transl(-0.55 ,0.1, 0.7)*troty(-pi);
+qMatrix = Operate.traj(r,T,q0);
+Operate.mov(r,qMatrix,finger1,finger2);
+% Delete car part
+try delete(p4); 
+catch ME
+end
+% Grab part and move
+q0 = deg2rad([90 0 0 0 0 0 0]);
+T = transl(0, 0.05, 0.6)*troty(-pi);
+qMatrix = Operate.traj(r,T,q0);
+Operate.PlotPose('wheels_axial.ply',r,qMatrix,finger1,finger2,pos12);
+
 % Hans third movement
-q0 = deg2rad([45 45 45 0 0 90 0]);
-T = transl(-0.55 ,0.1, 0.6)*troty(-pi);
-Operate.mov(r,T,q0);
-% Hans fourth movement
-q0 = deg2rad([-45 -45 -45 0 0 90 0]);
-T = transl(-0.2, -0.1, 0.51)*troty(-pi);
-Operate.mov(r,T,q0);
-% % Toybot first movement
-% q0 = deg2rad([45 45 45 0 0 90 0]);
-% T = transl(0.55 ,-0.1, 0.57)*troty(-pi);
-% Operate.mov(T,q0);
-% % Toybot second movement
-% q0 = deg2rad([45 45 45 0 0 90 0]);
-% T = transl(0.55 ,0.1, 0.57)*troty(-pi);
-% Operate.mov(T,q0);
-% q0 = deg2rad([45 45 45 0 0 90 0]);
-% T = transl(0.55 ,0.1, 0.57)*troty(-pi);
-% Operate.mov(T,q0);
+q0 = deg2rad([45 0 0 0 0 0 0]);
+T = transl(-0.32,0,1);
+qMatrix = Operate.traj(r,T,q0);
+Operate.mov(r,qMatrix,finger1,finger2);
+
+% Toybot first movement
+q0 = deg2rad([90 0 0 0 0 0 0]);
+T = transl(0.55 ,-0.1, 0.7)*troty(-pi);
+qMatrix = Operate.traj(b,T,q0);
+Operate.mov(b,qMatrix,finger1,finger2);
+% Delete car part
+try delete(p1); 
+catch ME
+end
+% Grab part and move
+q0 = deg2rad([90 0 -45 0 0 0 0]);
+T = transl(-0.2, 0, 0.65)*troty(-pi);
+qMatrix = Operate.traj(b,T,q0);
+Operate.PlotPose('car_base.ply',b,qMatrix,finger1,finger2,pos10);
